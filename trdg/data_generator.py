@@ -1,5 +1,6 @@
 import os
 import random as rnd
+from urllib import parse
 
 from PIL import Image, ImageFilter
 
@@ -9,6 +10,48 @@ try:
     from trdg import handwritten_text_generator
 except ImportError as e:
     print("Missing modules for handwritten text generation.")
+
+
+def get_font_name(path):
+    head, tail = os.path.split(path)
+    return tail[:-3]
+
+
+def encode2_safe_file_name(file_name):
+    conversion = {'*': '__Star__',
+                  '\\': '__BackSlash__',
+                  '/': '__Slash__',
+                  ':': '__Colon__',
+                  ';': '__SemiColon__',
+                  '<': '__LeftBrace__',
+                  '>': '__RightBrace__'
+
+    }
+    tmp_file_name = file_name[:-4]
+    ext = file_name[-4:]
+    new_file_name = ''
+    for ch in tmp_file_name:
+        if conversion.get(ch) is not None:
+            ch = conversion[ch]
+        new_file_name += ch
+
+    return new_file_name + ext
+
+
+def decode_safe_file_name(file_name):
+    conversion = {'*': '__Star__',
+                  '\\': '__BackSlash__',
+                  '/': '__Slash__',
+                  ':': '__Colon__',
+                  ';': '__SemiColon__',
+                  '<': '__LeftBrace__',
+                  '>': '__RightBrace__'
+                  }
+    new_file_name = file_name[:-4]
+    ext = file_name[-4:]
+    for key, value in conversion.items():
+        new_file_name = new_file_name.replace(value, key)
+    return new_file_name + ext
 
 
 class FakeTextDataGenerator(object):
@@ -226,8 +269,10 @@ class FakeTextDataGenerator(object):
             mask_name = "{}_{}_mask.png".format(text, str(index))
 
         # Save the image
+        font_name = get_font_name(font)
+        safe_file_name = encode2_safe_file_name (image_name)
         if out_dir is not None:
-            final_image.convert("RGB").save(os.path.join(out_dir, image_name))
+            final_image.convert("RGB").save(os.path.join(out_dir, font_name + '-' + safe_file_name))
             if output_mask == 1:
                 final_mask.convert("RGB").save(os.path.join(out_dir, mask_name))
         else:

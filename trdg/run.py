@@ -321,7 +321,8 @@ def main():
     if args.dict:
         lang_dict = []
         if os.path.isfile(args.dict):
-            with open(args.dict, "r", encoding="utf8", errors="ignore") as d:
+            # with open(args.dict, "r", encoding="utf8", errors="ignore") as d:
+            with open(args.dict, "r", encoding="ms949", errors="ignore") as d:
                 lang_dict = [l for l in d.read().splitlines() if len(l) > 0]
         else:
             sys.exit("Cannot open dict")

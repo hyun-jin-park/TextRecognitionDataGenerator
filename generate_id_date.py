@@ -1,9 +1,9 @@
 import os
 import random 
 
-general_id_target = 500000
-driver_id_target  = 10000
-date_target = 500000
+general_id_target = 5000
+driver_id_target  = 3000
+date_target = 2000
 
 digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
@@ -26,10 +26,3 @@ with open('id_date_single_char.txt', 'w' , encoding='utf8') as f:
         third = ''.join(random.sample(digits, 2))
         f.write(f'{first}.{second}.{third}.{fourth}\n')
         f.write(f'{first}.{second}.{third}.{fourth}.\n')
-
-    for i in range(ord('가'), ord('힣')):
-        f.write(f'{chr(i)}\n')
-
-
-
-
